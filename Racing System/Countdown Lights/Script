@@ -1,0 +1,6 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEventCountdown")
+
+RemoteEvent.OnServerEvent:Connect(function()
+RemoteEvent:FireAllClients()
+end)
