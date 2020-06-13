@@ -1,0 +1,147 @@
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEventCountdown")
+
+local button = script.Parent.Parent.StartRace
+
+button.MouseButton1Click:Connect(function()
+RemoteEvent:FireServer()
+end)
+
+
+RemoteEvent.OnClientEvent:Connect(function()
+	
+local text = script.Parent
+local seconds = ReplicatedStorage:WaitForChild("Time")
+	
+text.Text = seconds.Value -- Makes the text in the TextLabel the same as what is in the "Time" Value under ScreenGui.
+
+text.Visible = false
+
+local function PreStage()
+	
+	local prestagelights = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer3.StageSigns.PreStageLights:FindFirstChildOfClass("PointLight")
+	local prestagelightsparts = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer3.StageSigns.PreStageLights:GetChildren()
+	
+for _, prestagelightsparts in pairs(prestagelightsparts) do
+   
+    if prestagelights then
+        prestagelights.Enabled = true
+    end
+end
+
+for _, prestagelightsparts in pairs(prestagelightsparts) do
+    prestagelightsparts.Material = Enum.Material.Neon
+	end
+end
+
+
+local function Stage()
+	
+	local stagelights = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer3.StageSigns.StageLights:FindFirstChildOfClass("PointLight")
+	local stagelightsparts = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer3.StageSigns.StageLights:GetChildren()
+	
+for _, stagelightsparts in pairs(stagelightsparts) do
+   
+    if stagelights then
+        stagelights.Enabled = true
+    end
+end
+
+for _, stagelightsparts in pairs(stagelightsparts) do
+    stagelightsparts.Material = Enum.Material.Neon
+	end
+end
+
+
+local function Red()
+	local RedLights = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer3.RedLights.Lights:FindFirstChildOfClass("PointLight")
+	local RedLightsParts = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer3.RedLights.Lights:GetChildren()
+	
+for _, RedLightsParts in pairs(RedLightsParts) do
+   
+    if RedLights then
+        RedLights.Enabled = true
+    end
+end
+
+for _, RedLightsParts in pairs(RedLightsParts) do
+    RedLightsParts.Material = Enum.Material.Neon
+	end
+end
+
+
+local function Yellow()
+	local YellowLights = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer3.YellowLights.Lights:FindFirstChildOfClass("PointLight")
+	local YellowLightsParts = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer3.YellowLights.Lights:GetChildren()
+	
+for _, YellowLightsParts in pairs(YellowLightsParts) do
+   
+    if YellowLights then
+        YellowLights.Enabled = true
+    end
+end
+
+for _, YellowLightsParts in pairs(YellowLightsParts) do
+    YellowLightsParts.Material = Enum.Material.Neon
+	end
+end
+
+
+local function Green()
+	local GreenLights = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer3.GreenLights.Lights:FindFirstChildOfClass("PointLight")
+	local GreenLightsParts = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer3.GreenLights.Lights:GetChildren()
+	
+for _, GreenLightsParts in pairs(GreenLightsParts) do
+   
+    if GreenLights then
+        GreenLights.Enabled = true
+    end
+end
+
+for _, GreenLightsParts in pairs(GreenLightsParts) do
+    GreenLightsParts.Material = Enum.Material.Neon
+	end
+end
+
+
+
+local function Countdown() -- Makes the countdown code into a local function.
+	
+text.Visible = true
+
+if seconds.Value == 5 then
+	PreStage()
+end
+
+while seconds.Value > 0 do
+	seconds.Value = seconds.Value - 1
+	wait(1)
+ script.Parent.Text = seconds.Value -- Makes the TextLabel countdown from whatever number is in the "Time" Value under ScreenGui.
+
+if seconds.Value == 3 then
+	Stage()
+end
+
+if seconds.Value == 2 then
+	Red()
+end
+
+if seconds.Value == 1 then
+	Yellow()
+end
+
+if seconds.Value == 0 then
+	script.Parent.Text = "GO!"
+	Green()
+end
+
+if script.Parent.Text == "GO!" then
+	wait(1)
+	text.Visible = false
+			end 
+end
+		-- Waits for _ seconds, and then makes the TextLabel not visible.
+
+	end
+	Countdown()
+end)
