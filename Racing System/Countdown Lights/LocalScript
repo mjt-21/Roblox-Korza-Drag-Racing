@@ -12,6 +12,8 @@ RemoteEvent.OnClientEvent:Connect(function()
 	
 local text = script.Parent
 local seconds = ReplicatedStorage:WaitForChild("Time")
+
+local button = script.Parent.Parent.StartRace
 	
 text.Text = seconds.Value -- Makes the text in the TextLabel the same as what is in the "Time" Value under ScreenGui.
 
@@ -212,8 +214,8 @@ for _, YellowLightsParts3 in pairs(YellowLightsParts3) do
     YellowLightsParts3.Material = Enum.Material.Neon
 	end		
 end
-
-
+	
+	
 local function Green()
 	local GreenLights1 = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer1.GreenLights.Lights:FindFirstChildOfClass("PointLight")
 	local GreenLightsParts1 = game.Workspace["Racing System"]["Countdown Lights"].RaceTimer1.GreenLights.Lights:GetChildren()
@@ -265,12 +267,14 @@ for _, GreenLightsParts3 in pairs(GreenLightsParts3) do
 		
 		
 end
-
-
-local function Countdown() -- Makes the countdown code into a local function.
 	
-text.Visible = true
+seconds.Value = 5
+button.Visible = false
 
+local function Countdown() -- Makes the countdown code into a local function.		
+		
+text.Visible = true	
+		
 if seconds.Value == 5 then
 	PreStage()
 end
@@ -295,16 +299,24 @@ end
 if seconds.Value == 0 then
 	script.Parent.Text = "GO!"
 	Green()
+	button.Text = "Start Race"		
 end
 
 if script.Parent.Text == "GO!" then
 	wait(1)
 	text.Visible = false
-end	
-					
+	-- Waits for _ seconds, and then makes the TextLabel not visible.
+			end			
+				
+if text.Visible == false then
+	button.Visible = true
+			end				
 		end
-		-- Waits for _ seconds, and then makes the TextLabel not visible.
-
-	end
-	Countdown()
+		
+seconds.Value = 5
+	
+end
+	
+Countdown()
+	
 end)
