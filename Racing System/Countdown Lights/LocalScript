@@ -11,7 +11,7 @@ end)
 RemoteEvent.OnClientEvent:Connect(function()
 	
 local text = script.Parent
-local seconds = ReplicatedStorage:WaitForChild("Time")
+local seconds = ReplicatedStorage:WaitForChild("CountdownTime")
 
 local button = script.Parent.Parent.StartRace
 	
