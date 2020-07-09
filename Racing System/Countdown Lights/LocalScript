@@ -1,6 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEventCountdown")
-local RaceTimeRE = ReplicatedStorage:WaitForChild("RaceTimeRE")
 
 local button = script.Parent.Parent.StartRace
 local CountdownTime = ReplicatedStorage:WaitForChild("TESTVALUE")
@@ -22,7 +21,6 @@ RemoteEvent.OnClientEvent:Connect(function()
 		
 		if CountdownTime.Value == 0 then
 			text.Text = "GO!"
-			RaceTimeRE:FireAllClients()
 		end 
 		
 		if CountdownTime.Value == 5 then
