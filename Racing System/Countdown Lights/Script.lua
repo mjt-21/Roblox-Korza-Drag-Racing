@@ -3,9 +3,9 @@ local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEventCountdown")
 
 RemoteEvent.OnServerEvent:Connect(function()
 	
-RemoteEvent:FireAllClients()	
+RemoteEvent:FireAllClients()
 	
-local seconds = ReplicatedStorage:WaitForChild("TESTVALUE")
+local seconds = ReplicatedStorage:WaitForChild("CountdownTime")
 
 local function PreStage()
 	
