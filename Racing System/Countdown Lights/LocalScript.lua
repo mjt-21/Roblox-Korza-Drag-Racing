@@ -2,7 +2,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEventCountdown")
 
 local button = script.Parent.Parent.StartRace
-local CountdownTime = ReplicatedStorage:WaitForChild("TESTVALUE")
+local CountdownTime = ReplicatedStorage:WaitForChild("CountdownTime")
 local text = script.Parent
 
 button.MouseButton1Click:Connect(function()
