@@ -1,5 +1,5 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local CountdownTime = ReplicatedStorage:WaitForChild("TESTVALUE")
+local CountdownTime = ReplicatedStorage:WaitForChild("CountdownTime")
 local LapTime = ReplicatedStorage:WaitForChild("LapTime")
 local RacingBool = ReplicatedStorage:WaitForChild("RacingBool")
 local FinishLine = game.Workspace["Racing System"].FinishLine
@@ -15,12 +15,13 @@ local function StartEnd()
 	do
 		LapTime.Value = LapTime.Value + 0.1
 		wait(0.1)
-		print(LapTime.Value)
 	end
 	
 	if RacingBool.Value == true
 		then
-			print("Your Time Is: " .. LapTime.Value)
+		wait(5)
+		LapTime.Value = 0
+		RacingBool.Value = false
 	end
 	
 end
