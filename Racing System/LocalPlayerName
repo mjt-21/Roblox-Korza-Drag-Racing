@@ -1,0 +1,8 @@
+-- Services
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Variables
+local RemoteFunction = ReplicatedStorage:WaitForChild("PlayerNumFunction")
+
+
+RemoteFunction:InvokeServer()
