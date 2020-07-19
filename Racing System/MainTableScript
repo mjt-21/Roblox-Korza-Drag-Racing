@@ -1,0 +1,43 @@
+-- Services
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerStorage = game:GetService("ServerStorage")
+
+-- Variables
+local RemoteFunction = ReplicatedStorage:WaitForChild("PlayerNumFunction")
+
+local Time1 = ServerStorage.PlayerTimes.Time1
+local Time2 = ServerStorage.PlayerTimes.Time2
+local Time3 = ServerStorage.PlayerTimes.Time3
+local Time4 = ServerStorage.PlayerTimes.Time4
+
+local PlayerAssignments = {
+	Player1 = {Name = "1nil", Time = Time1.Value},
+	Player2 = {Name = "2nil", Time = Time2.Value},
+	Player3 = {Name = "3nil", Time = Time3.Value},
+	Player4 = {Name = "4nil", Time = Time4.Value}
+}
+
+RemoteFunction.OnServerInvoke = function(Player)
+for Var, Players in pairs(PlayerAssignments) do
+		if Players.Name == "1nil" then
+			Players.Name = Player.Name
+			print(Players.Name .. " " .. Players.Time)
+			break
+		elseif
+			Players.Name == "2nil" then
+			Players.Name = Player.Name
+			print(Players.Name .. " " .. Players.Time)
+			break
+		elseif
+			Players.Name == "3nil" then
+			Players.Name = Player.Name
+			print(Players.Name .. " " .. Players.Time)
+			break
+		elseif
+			Players.Name == "4nil" then
+			Players.Name = Player.Name
+			print(Players.Name .. " " .. Players.Time)
+			break
+		end
+	end
+end
