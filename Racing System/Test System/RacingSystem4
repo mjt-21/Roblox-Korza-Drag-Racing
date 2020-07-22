@@ -1,0 +1,19 @@
+-- Variables
+local RacingBool1 = game.ServerStorage.RacingBools.RacingBool1
+local RacingBool2 = game.ServerStorage.RacingBools.RacingBool2
+local RacingBool3 = game.ServerStorage.RacingBools.RacingBool3
+local RacingBool4 = game.ServerStorage.RacingBools.RacingBool4
+
+local RaceTime1 = game.ServerStorage.PlayerTimes.Time1
+local RaceTime2 = game.ServerStorage.PlayerTimes.Time2
+local RaceTime3 = game.ServerStorage.PlayerTimes.Time3
+local RaceTime4 = game.ServerStorage.PlayerTimes.Time4
+
+wait(5)
+
+while RacingBool4.Value == false do
+	if RacingBool4.Value == false then
+	RaceTime4.Value = RaceTime4.Value + 0.1
+	wait(0.1)
+	end
+end
