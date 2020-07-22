@@ -15,6 +15,5 @@ while RacingBool1.Value == false do
 	if RacingBool1.Value == false then
 	RaceTime1.Value = RaceTime1.Value + 0.1
 	wait(0.1)
-	--print("RaceTime1: " .. RaceTime1.Value)
 	end
 end
