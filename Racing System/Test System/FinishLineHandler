@@ -1,0 +1,18 @@
+-- Services
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Variables
+local FinishLine = game.Workspace.FinishLine
+local BoolValue = game.ServerStorage.FinishLineActivate
+local ReceiverBindable = ReplicatedStorage:WaitForChild("FinishLine")
+
+
+FinishLine.Touched:Connect(function()
+	BoolValue.Value = true
+end)
+
+ReceiverBindable.OnInvoke = function(PlayerAssignments)
+	for Var, Players in pairs(PlayerAssignments) do
+		print("IT WORKED!!!" .. " " .. Players.Name .. " " .. Players.Time.Value)
+	end
+end
