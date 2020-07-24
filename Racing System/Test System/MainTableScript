@@ -4,19 +4,38 @@ local ServerStorage = game:GetService("ServerStorage")
 
 -- Variables
 local RemoteFunction = ReplicatedStorage:WaitForChild("PlayerNumFunction")
+local FinishLineBindable = ReplicatedStorage:WaitForChild("FinishLine")
 
 local Time1 = ServerStorage.PlayerTimes.Time1
 local Time2 = ServerStorage.PlayerTimes.Time2
 local Time3 = ServerStorage.PlayerTimes.Time3
 local Time4 = ServerStorage.PlayerTimes.Time4
 
+local RacingBool1 = game.ServerStorage.RacingBools.RacingBool1
+local RacingBool2 = game.ServerStorage.RacingBools.RacingBool2
+local RacingBool3 = game.ServerStorage.RacingBools.RacingBool3
+local RacingBool4 = game.ServerStorage.RacingBools.RacingBool4
+
+local FinishLineBool = game.ServerStorage.FinishLineActivate
+
 -- Creates Main Table
 local PlayerAssignments = {
-	Player1 = {Name = "1nil", Time = Time1},
-	Player2 = {Name = "2nil", Time = Time2},
-	Player3 = {Name = "3nil", Time = Time3},
-	Player4 = {Name = "4nil", Time = Time4}
+	{Name = "1nil", Time = Time1, Bool = RacingBool1},
+	{Name = "2nil", Time = Time2, Bool = RacingBool2},
+	{Name = "3nil", Time = Time3, Bool = RacingBool3},
+	{Name = "4nil", Time = Time4, Bool = RacingBool4}
 }
+
+FinishLineBool.Changed:Connect(function()
+	if FinishLineBool.Value == true then -- Checks when player touches finish line (bool value will become true)
+		-- Makes racing bool values true, to stop counting RaceTimes in RacingSystem scripts
+		RacingBool1.Value = true
+		RacingBool2.Value = true
+		RacingBool3.Value = true
+		RacingBool4.Value = true
+		FinishLineBindable:Invoke(PlayerAssignments) -- Invokes BindableEvent and passes the table through it
+	end
+end)
 
 RemoteFunction.OnServerInvoke = function(Player, LocalRaceTime) -- Checks for when RemoteFunction fires to server, then does the below
 	
