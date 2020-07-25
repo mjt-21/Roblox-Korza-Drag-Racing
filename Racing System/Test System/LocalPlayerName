@@ -1,8 +1,0 @@
--- Services
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
--- Variables
-local RemoteFunction = ReplicatedStorage:WaitForChild("PlayerNumFunction")
-local LocalRaceTime = game:GetService("Players").LocalPlayer.PlayerGui:WaitForChild("LocalRaceTime")
-
-RemoteFunction:InvokeServer(LocalRaceTime)
