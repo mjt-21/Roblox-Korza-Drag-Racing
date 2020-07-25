@@ -1,0 +1,40 @@
+-- Services
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Variables
+local button = script.Parent
+local StatsRemote = ReplicatedStorage:WaitForChild("RaceStats")
+
+local StatsFrame = script.Parent.Parent.Stats
+
+local PlayerName1 = script.Parent.Parent.Stats:WaitForChild("PlayerName1")
+local PlayerName2 = script.Parent.Parent.Stats:WaitForChild("PlayerName2")
+local PlayerName3 = script.Parent.Parent.Stats:WaitForChild("PlayerName3")
+local PlayerName4 = script.Parent.Parent.Stats:WaitForChild("PlayerName4")
+
+local PlayerTime1 = script.Parent.Parent.Stats:WaitForChild("PlayerTime1")
+local PlayerTime2 = script.Parent.Parent.Stats:WaitForChild("PlayerTime2")
+local PlayerTime3 = script.Parent.Parent.Stats:WaitForChild("PlayerTime3")
+local PlayerTime4 = script.Parent.Parent.Stats:WaitForChild("PlayerTime4")
+
+
+button.MouseButton1Click:Connect(function()
+	if StatsFrame.Visible == false then
+		StatsFrame.Visible = true
+	elseif
+		StatsFrame.Visible == true then
+		StatsFrame.Visible = false
+	end
+	--StatsRemote:FireServer()
+end)
+
+--[[StatsRemote.OnClientEvent:Connect(function(PlayerAssignments)
+	table.sort(PlayerAssignments, function(a, b)
+    	return a.TimeValue < b.TimeValue
+	end)
+	
+	for Var, Players in pairs(PlayerAssignments) do
+		print(Players.Name)
+		print(Players.TimeValue)
+	end
+end)--]]
