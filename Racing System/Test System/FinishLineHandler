@@ -6,13 +6,25 @@ local FinishLine = game.Workspace.FinishLine
 local BoolValue = game.ServerStorage.FinishLineActivate
 local ReceiverBindable = ReplicatedStorage:WaitForChild("FinishLine")
 
+PlayerName = nil
 
-FinishLine.Touched:Connect(function()
-	BoolValue.Value = true
+FinishLine.Touched:Connect(function(hit)
+	if game.Players:GetPlayerFromCharacter(hit.Parent) then
+		PlayerName = tostring(hit.Parent.Name)
+		BoolValue.Value = true
+		if BoolValue.Value == true then
+			BoolValue.Value = false
+		end
+    end
 end)
 
 ReceiverBindable.OnInvoke = function(PlayerAssignments)
 	for Var, Players in pairs(PlayerAssignments) do
-		print("IT WORKED!!!" .. " " .. Players.Name .. " " .. Players.Time.Value)
+		if PlayerName == Players.Name then
+			Players.Bool.Value = true
+			print("Player Name: " .. Players.Name)
+			print("Player Time: " .. Players.Time.Value)
+			break
+		end
 	end
 end
