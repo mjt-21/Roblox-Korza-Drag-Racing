@@ -11,6 +11,7 @@ local Time2 = ServerStorage.PlayerTimes.Time2
 local Time3 = ServerStorage.PlayerTimes.Time3
 local Time4 = ServerStorage.PlayerTimes.Time4
 
+
 local RacingBool1 = game.ServerStorage.RacingBools.RacingBool1
 local RacingBool2 = game.ServerStorage.RacingBools.RacingBool2
 local RacingBool3 = game.ServerStorage.RacingBools.RacingBool3
@@ -18,21 +19,24 @@ local RacingBool4 = game.ServerStorage.RacingBools.RacingBool4
 
 local FinishLineBool = game.ServerStorage.FinishLineActivate
 
+local GuiEvent = ReplicatedStorage:WaitForChild("RaceStats")
+
 -- Creates Main Table
 local PlayerAssignments = {
-	{Name = "1nil", Time = Time1, Bool = RacingBool1},
-	{Name = "2nil", Time = Time2, Bool = RacingBool2},
-	{Name = "3nil", Time = Time3, Bool = RacingBool3},
-	{Name = "4nil", Time = Time4, Bool = RacingBool4}
+	{Name = "1nil", Time = Time1, TimeValue = Time1.Value, Bool = RacingBool1},
+	{Name = "2nil", Time = Time2, TimeValue = Time2.Value, Bool = RacingBool2},
+	{Name = "3nil", Time = Time3, TimeValue = Time3.Value, Bool = RacingBool3},
+	{Name = "4nil", Time = Time4, TimeValue = Time4.Value, Bool = RacingBool4}
 }
+
+local function TableSort()
+	table.sort(PlayerAssignments, function(a, b)
+    	return a.Time.Value < b.Time.Value
+	end)
+end
 
 FinishLineBool.Changed:Connect(function()
 	if FinishLineBool.Value == true then -- Checks when player touches finish line (bool value will become true)
-		-- Makes racing bool values true, to stop counting RaceTimes in RacingSystem scripts
-		RacingBool1.Value = true
-		RacingBool2.Value = true
-		RacingBool3.Value = true
-		RacingBool4.Value = true
 		FinishLineBindable:Invoke(PlayerAssignments) -- Invokes BindableEvent and passes the table through it
 	end
 end)
@@ -41,41 +45,42 @@ RemoteFunction.OnServerInvoke = function(Player, LocalRaceTime) -- Checks for wh
 	
 	for Var, Players in pairs(PlayerAssignments) do -- Cycles through the table
 		if Players.Name == "1nil" then
-			Players.Name = Player.Name -- Makes the name in the table equal to what the player name is 
-			LocalRaceTime.Value = Players.Time.Value -- Makes the localracetime be equal to what is in the server time value
+			Players.Name = Player.Name -- Makes the name in the table equal to what the player name is
 			Players.Time.Changed:Connect(function()
-				LocalRaceTime.Value = Players.Time.Value -- Makes the localracetime be equal to what is in the server time value
-				print(Players.Name .. " " .. Players.Time.Value)
+				Players.TimeValue = Players.Time.Value
+				print(Players.Name .. " " .. Players.TimeValue)
 			end)
 			break -- Stops the loop
 			-- Continues on doing the same thing, checking each name value in the table
 		elseif
 			Players.Name == "2nil" then
 			Players.Name = Player.Name
-			LocalRaceTime.Value = Players.Time.Value -- Makes the localracetime be equal to what is in the server time value
 			Players.Time.Changed:Connect(function()
-				LocalRaceTime.Value = Players.Time.Value -- Makes the localracetime be equal to what is in the server time value
-				print(Players.Name .. " " .. Players.Time.Value)
+				Players.TimeValue = Players.Time.Value
+				print(Players.Name .. " " .. Players.TimeValue)
 			end)
 			break
 		elseif
 			Players.Name == "3nil" then
 			Players.Name = Player.Name
-			LocalRaceTime.Value = Players.Time.Value -- Makes the localracetime be equal to what is in the server time value
 			Players.Time.Changed:Connect(function()
-				LocalRaceTime.Value = Players.Time.Value -- Makes the localracetime be equal to what is in the server time value
-				print(Players.Name .. " " .. Players.Time.Value)
+				Players.TimeValue = Players.Time.Value
+				print(Players.Name .. " " .. Players.TimeValue)
 			end)
 			break
 		elseif
 			Players.Name == "4nil" then
 			Players.Name = Player.Name
-			LocalRaceTime.Value = Players.Time.Value -- Makes the localracetime be equal to what is in the server time value
 			Players.Time.Changed:Connect(function()
-				LocalRaceTime.Value = Players.Time.Value -- Makes the localracetime be equal to what is in the server time value
-				print(Players.Name .. " " .. Players.Time.Value)
+				Players.TimeValue = Players.Time.Value
+				print(Players.Name .. " " .. Players.TimeValue)
 			end)
 			break
 		end
 	end
 end
+
+-- Receives RemoteEvent From GUI LocalScript, Then Fires Back To All Clients
+GuiEvent.OnServerEvent:Connect(function()
+	GuiEvent:FireAllClients(PlayerAssignments)
+end)
