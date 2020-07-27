@@ -20,6 +20,7 @@ local RacingBool4 = game.ServerStorage.RacingBools.RacingBool4
 local FinishLineBool = game.ServerStorage.FinishLineActivate
 
 local GuiEvent = ReplicatedStorage:WaitForChild("RaceStats")
+local RaceEndRemote = ReplicatedStorage:WaitForChild("GUIRaceEnd")
 
 -- Creates Main Table
 local PlayerAssignments = {
@@ -29,15 +30,12 @@ local PlayerAssignments = {
 	{Name = "4nil", Time = Time4, TimeValue = Time4.Value, Bool = RacingBool4}
 }
 
-local function TableSort()
-	table.sort(PlayerAssignments, function(a, b)
-    	return a.Time.Value < b.Time.Value
-	end)
-end
+GuiEvent:FireAllClients(PlayerAssignments)
 
 FinishLineBool.Changed:Connect(function()
 	if FinishLineBool.Value == true then -- Checks when player touches finish line (bool value will become true)
 		FinishLineBindable:Invoke(PlayerAssignments) -- Invokes BindableEvent and passes the table through it
+		RaceEndRemote:FireAllClients(PlayerAssignments) -- Fires event to tell the client that the race has ended, and passes table
 	end
 end)
 
@@ -46,9 +44,10 @@ RemoteFunction.OnServerInvoke = function(Player, LocalRaceTime) -- Checks for wh
 	for Var, Players in pairs(PlayerAssignments) do -- Cycles through the table
 		if Players.Name == "1nil" then
 			Players.Name = Player.Name -- Makes the name in the table equal to what the player name is
-			Players.Time.Changed:Connect(function()
-				Players.TimeValue = Players.Time.Value
-				print(Players.Name .. " " .. Players.TimeValue)
+			Players.Time.Changed:Connect(function() -- Checks for when the Time.Value changes, then does below
+				GuiEvent:FireAllClients(PlayerAssignments) -- Sends updated table to RaceGUIHandler
+				Players.TimeValue = Players.Time.Value -- Keeps the player's TimeValue updated
+				print(Players.Name .. " " .. string.format("%0.3f", tostring(Players.TimeValue)))
 			end)
 			break -- Stops the loop
 			-- Continues on doing the same thing, checking each name value in the table
@@ -56,31 +55,29 @@ RemoteFunction.OnServerInvoke = function(Player, LocalRaceTime) -- Checks for wh
 			Players.Name == "2nil" then
 			Players.Name = Player.Name
 			Players.Time.Changed:Connect(function()
+				GuiEvent:FireAllClients(PlayerAssignments)
 				Players.TimeValue = Players.Time.Value
-				print(Players.Name .. " " .. Players.TimeValue)
+				print(Players.Name .. " " .. string.format("%0.3f", tostring(Players.TimeValue)))
 			end)
 			break
 		elseif
 			Players.Name == "3nil" then
 			Players.Name = Player.Name
 			Players.Time.Changed:Connect(function()
+				GuiEvent:FireAllClients(PlayerAssignments)
 				Players.TimeValue = Players.Time.Value
-				print(Players.Name .. " " .. Players.TimeValue)
+				print(Players.Name .. " " .. string.format("%0.3f", tostring(Players.TimeValue)))
 			end)
 			break
 		elseif
 			Players.Name == "4nil" then
 			Players.Name = Player.Name
 			Players.Time.Changed:Connect(function()
+				GuiEvent:FireAllClients(PlayerAssignments)
 				Players.TimeValue = Players.Time.Value
-				print(Players.Name .. " " .. Players.TimeValue)
+				print(Players.Name .. " " .. string.format("%0.3f", tostring(Players.TimeValue)))
 			end)
 			break
 		end
 	end
 end
-
--- Receives RemoteEvent From GUI LocalScript, Then Fires Back To All Clients
-GuiEvent.OnServerEvent:Connect(function()
-	GuiEvent:FireAllClients(PlayerAssignments)
-end)
