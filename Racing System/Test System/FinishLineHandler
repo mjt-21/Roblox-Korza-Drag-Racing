@@ -22,8 +22,6 @@ ReceiverBindable.OnInvoke = function(PlayerAssignments)
 	for Var, Players in pairs(PlayerAssignments) do
 		if PlayerName == Players.Name then
 			Players.Bool.Value = true
-			print("Player Name: " .. Players.Name)
-			print("Player Time: " .. Players.Time.Value)
 			break
 		end
 	end
