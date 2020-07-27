@@ -11,9 +11,10 @@ local RaceTime4 = game.ServerStorage.PlayerTimes.Time4
 
 wait(5)
 
-while RacingBool2.Value == false do
-	if RacingBool2.Value == false then
-	RaceTime2.Value = RaceTime2.Value + 0.1
-	wait(0.1)
-	end
+if RacingBool2.Value == false then
+	local startTime = tick()
+	while RacingBool2.Value == false do
+		game:GetService("RunService").Heartbeat:Wait()
+		RaceTime2.Value = tick() - startTime
+	end 
 end
