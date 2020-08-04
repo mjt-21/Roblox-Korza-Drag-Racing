@@ -5,17 +5,53 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local FinishLine = game.Workspace.FinishLine
 local BoolValue = game.ServerStorage.FinishLineActivate
 local ReceiverBindable = ReplicatedStorage:WaitForChild("FinishLine")
+local BindableRaceEndRemote = ReplicatedStorage:WaitForChild("BindableGUIRaceEnd")
+local RaceEndRemote = ReplicatedStorage:WaitForChild("GUIRaceEnd")
+	
+--[[	for key, players in pairs(playersFinished) do
+		print(players)
+		if players == PlayerName and debounce then
+			wait(bounce)
+			debounce = true
+			break
+		end
+	end --]]
 
-PlayerName = nil
+local playersBlackList = {}
+
+function foundInList(player)
+	for _,target in ipairs(playersBlackList) do
+		if target == player then
+			return true;
+		end
+	end
+	return false;
+end
 
 FinishLine.Touched:Connect(function(hit)
-	if game.Players:GetPlayerFromCharacter(hit.Parent) then
+	
+	local debounce = true
+	local bounce = 8
+	
+	local PlayerThatTouched = game.Players:GetPlayerFromCharacter(hit.Parent)
+	if game.Players:GetPlayerFromCharacter(hit.Parent)then
 		PlayerName = tostring(hit.Parent.Name)
-		BoolValue.Value = true
-		if BoolValue.Value == true then
-			BoolValue.Value = false
+	end
+	
+	if PlayerName then
+		if not foundInList(PlayerName) then
+			table.insert(playersBlackList, PlayerName)
+			
+			if game.Players:GetPlayerFromCharacter(hit.Parent)then
+				BindableRaceEndRemote:Fire(PlayerThatTouched, PlayerName)
+				BoolValue.Value = true
+				if BoolValue.Value == true then
+					BoolValue.Value = false
+				end
+			end	
+			print(playersBlackList[1])
 		end
-    end
+	end
 end)
 
 ReceiverBindable.OnInvoke = function(PlayerAssignments)
