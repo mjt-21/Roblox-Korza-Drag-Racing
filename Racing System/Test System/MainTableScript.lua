@@ -1,6 +1,7 @@
 -- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerStorage = game:GetService("ServerStorage")
+local Players = game:GetService("Players")
 
 -- Variables
 local RemoteFunction = ReplicatedStorage:WaitForChild("PlayerNumFunction")
@@ -21,8 +22,9 @@ local FinishLineBool = game.ServerStorage.FinishLineActivate
 
 local GuiEvent = ReplicatedStorage:WaitForChild("RaceStats")
 local RaceEndRemote = ReplicatedStorage:WaitForChild("GUIRaceEnd")
+local BindableRaceEnd = ReplicatedStorage:WaitForChild("BindableGUIRaceEnd")
 
--- Creates Main Table
+-- Creates main table which stores the players' stats in a match
 local PlayerAssignments = {
 	{Name = "1nil", Time = Time1, TimeValue = Time1.Value, Bool = RacingBool1},
 	{Name = "2nil", Time = Time2, TimeValue = Time2.Value, Bool = RacingBool2},
@@ -32,11 +34,9 @@ local PlayerAssignments = {
 
 GuiEvent:FireAllClients(PlayerAssignments)
 
-FinishLineBool.Changed:Connect(function()
-	if FinishLineBool.Value == true then -- Checks when player touches finish line (bool value will become true)
-		FinishLineBindable:Invoke(PlayerAssignments) -- Invokes BindableEvent and passes the table through it
-		RaceEndRemote:FireAllClients(PlayerAssignments) -- Fires event to tell the client that the race has ended, and passes table
-	end
+BindableRaceEnd.Event:Connect(function(PlayerThatTouched, PlayerName) -- Checks for when FinishLineHandler sees FinishLine is Touched
+	FinishLineBindable:Invoke(PlayerAssignments) -- Invokes BindableEvent and passes the table through it
+	RaceEndRemote:FireClient(PlayerThatTouched, PlayerName) -- Fires RemoteEvent to client, received in RaceGUIHandler
 end)
 
 RemoteFunction.OnServerInvoke = function(Player, LocalRaceTime) -- Checks for when RemoteFunction fires to server, then does the below
@@ -47,7 +47,6 @@ RemoteFunction.OnServerInvoke = function(Player, LocalRaceTime) -- Checks for wh
 			Players.Time.Changed:Connect(function() -- Checks for when the Time.Value changes, then does below
 				GuiEvent:FireAllClients(PlayerAssignments) -- Sends updated table to RaceGUIHandler
 				Players.TimeValue = Players.Time.Value -- Keeps the player's TimeValue updated
-				print(Players.Name .. " " .. string.format("%0.3f", tostring(Players.TimeValue)))
 			end)
 			break -- Stops the loop
 			-- Continues on doing the same thing, checking each name value in the table
@@ -57,7 +56,6 @@ RemoteFunction.OnServerInvoke = function(Player, LocalRaceTime) -- Checks for wh
 			Players.Time.Changed:Connect(function()
 				GuiEvent:FireAllClients(PlayerAssignments)
 				Players.TimeValue = Players.Time.Value
-				print(Players.Name .. " " .. string.format("%0.3f", tostring(Players.TimeValue)))
 			end)
 			break
 		elseif
@@ -66,7 +64,6 @@ RemoteFunction.OnServerInvoke = function(Player, LocalRaceTime) -- Checks for wh
 			Players.Time.Changed:Connect(function()
 				GuiEvent:FireAllClients(PlayerAssignments)
 				Players.TimeValue = Players.Time.Value
-				print(Players.Name .. " " .. string.format("%0.3f", tostring(Players.TimeValue)))
 			end)
 			break
 		elseif
@@ -75,7 +72,6 @@ RemoteFunction.OnServerInvoke = function(Player, LocalRaceTime) -- Checks for wh
 			Players.Time.Changed:Connect(function()
 				GuiEvent:FireAllClients(PlayerAssignments)
 				Players.TimeValue = Players.Time.Value
-				print(Players.Name .. " " .. string.format("%0.3f", tostring(Players.TimeValue)))
 			end)
 			break
 		end
