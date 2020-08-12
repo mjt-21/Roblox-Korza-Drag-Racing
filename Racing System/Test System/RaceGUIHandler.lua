@@ -1,4 +1,4 @@
--- Services
+--- Services
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 
@@ -8,6 +8,7 @@ local StatsFrame = script.Parent.Parent.Stats
 local StatsRemote = ReplicatedStorage:WaitForChild("RaceStats")
 local RaceEndRemote = ReplicatedStorage:WaitForChild("GUIRaceEnd")
 local LocalPlayerName = Players.LocalPlayer.Name
+local noWinnersGUIRemote = ReplicatedStorage:WaitForChild("NoWinnersGUIRemote")
 
 local PlayerName1 = script.Parent.Parent.Stats:WaitForChild("PlayerName1")
 local PlayerName2 = script.Parent.Parent.Stats:WaitForChild("PlayerName2")
@@ -21,6 +22,8 @@ local PlayerTime4 = script.Parent.Parent.Stats:WaitForChild("PlayerTime4")
 
 local PlayerPlacementLabel = script.Parent.Parent:WaitForChild("PlayerPlacement")
 local PlayerTimeLabel = script.Parent.Parent:WaitForChild("PlayerTime")
+
+local NoWinners = script.Parent.Parent:WaitForChild("NoWinners")
 
 button.MouseButton1Click:Connect(function() -- Checks when player clicks the button
 	if StatsFrame.Visible == false then
@@ -38,23 +41,26 @@ end)
 MainTable = {} -- Makes a global variable that will be made equal to the PlayerAssignments in MainTableScript (later)
 
 StatsRemote.OnClientEvent:Connect(function(PlayerAssignments) -- Connects to RemoteEvent from MainTableScript, updates stats from table
-	table.sort(PlayerAssignments, function(a, b)
-    	return a.TimeValue < b.TimeValue
-	end)
 	
 	MainTable = PlayerAssignments -- Makes the MainTable global variable be equal to the PlayerAssignments table in MainTableScript
 	
-	-- Makes PlayerNames texts be equal to the players' names in table
-	PlayerName1.Text = PlayerAssignments[1].Name
-	PlayerName2.Text = PlayerAssignments[2].Name
-	PlayerName3.Text = PlayerAssignments[3].Name
-	PlayerName4.Text = PlayerAssignments[4].Name
+	if PlayerAssignments[1].Name ~= "$1nil" and PlayerAssignments[1].Name ~= "$2nil" and PlayerAssignments[1].Name ~= "$3nil" and PlayerAssignments[1].Name ~= "$4nil" and PlayerAssignments[1].TimeValue ~= 0 then
+		PlayerName1.Text = PlayerAssignments[1].Name
+		PlayerTime1.Text = string.format("%0.3f", tostring(PlayerAssignments[1].TimeValue))
 	
-	-- Makes PlayerTimes texts be equal to the players' times in table
-	PlayerTime1.Text = string.format("%0.3f", tostring(PlayerAssignments[1].TimeValue))
-	PlayerTime2.Text = string.format("%0.3f", tostring(PlayerAssignments[2].TimeValue))
-	PlayerTime3.Text = string.format("%0.3f", tostring(PlayerAssignments[3].TimeValue))
-	PlayerTime4.Text = string.format("%0.3f", tostring(PlayerAssignments[4].TimeValue))
+	elseif PlayerAssignments[2].Name ~= "$1nil" and PlayerAssignments[2].Name ~= "$2nil" and PlayerAssignments[2].Name ~= "$3nil" and PlayerAssignments[2].Name ~= "$4nil" and PlayerAssignments[2].TimeValue ~= 0 then
+		PlayerName2.Text = PlayerAssignments[2].Name
+		PlayerTime2.Text = string.format("%0.3f", tostring(PlayerAssignments[2].TimeValue))
+	
+	elseif PlayerAssignments[3].Name ~= "$1nil" and PlayerAssignments[3].Name ~= "$2nil" and PlayerAssignments[3].Name ~= "$3nil" and PlayerAssignments[3].Name ~= "$4nil" and PlayerAssignments[3].TimeValue ~= 0 then
+		PlayerName3.Text = PlayerAssignments[3].Name
+		PlayerTime3.Text = string.format("%0.3f", tostring(PlayerAssignments[3].TimeValue))
+	
+elseif PlayerAssignments[4].Name ~= "$1nil" and PlayerAssignments[4].Name ~= "$2nil" and PlayerAssignments[4].Name ~= "$3nil" and PlayerAssignments[4].Name ~= "$4nil" and PlayerAssignments[4].TimeValue ~= 0 then
+		PlayerName4.Text = PlayerAssignments[4].Name
+		PlayerTime4.Text = string.format("%0.3f", tostring(PlayerAssignments[4].TimeValue))
+	end
+
 end)
 
 RaceEndRemote.OnClientEvent:Connect(function(PlayerName) -- When player touches finish line, RemoteEvent connects and brings in PlayerName (who touched FinishLine)
@@ -99,3 +105,14 @@ RaceEndRemote.OnClientEvent:Connect(function(PlayerName) -- When player touches 
 		end
 	end
 end)
+
+function noWinners(raceTimeLimitString)
+	NoWinners.Visible = true
+	NoWinners.Text = raceTimeLimitString
+	if raceTimeLimitString == "Race Ended!" then
+		wait(3)
+		NoWinners.Visible = false
+	end
+end
+
+noWinnersGUIRemote.OnClientEvent:Connect(noWinners)
