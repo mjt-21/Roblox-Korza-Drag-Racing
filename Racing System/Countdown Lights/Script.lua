@@ -1,6 +1,11 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RemoteEvent = ReplicatedStorage:WaitForChild("RemoteEventCountdown")
 
+local RacingBool1 = game.ServerStorage.RacingSystemStorage.RacingBools.RacingBool1
+local RacingBool2 = game.ServerStorage.RacingSystemStorage.RacingBools.RacingBool2
+local RacingBool3 = game.ServerStorage.RacingSystemStorage.RacingBools.RacingBool3
+local RacingBool4 = game.ServerStorage.RacingSystemStorage.RacingBools.RacingBool4	
+
 RemoteEvent.OnServerEvent:Connect(function()
 	
 RemoteEvent:FireAllClients()
@@ -281,7 +286,12 @@ if seconds.Value == 1 then
 end
 
 if seconds.Value == 0 then
-	Green()	
+	Green()
+				
+	RacingBool1.Value = true
+	RacingBool2.Value = true
+	RacingBool3.Value = true
+	RacingBool4.Value = true		
 end				
 		end
 		
