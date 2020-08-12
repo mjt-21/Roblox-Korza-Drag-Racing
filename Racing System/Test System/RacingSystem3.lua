@@ -1,6 +1,6 @@
 -- Variables
-local RacingBool3 = game.ServerStorage.RacingBools.RacingBool3
-local RaceTime3 = game.ServerStorage.PlayerTimes.Time3
+local RacingBool3 = game.ServerStorage.RacingSystemStorage.RacingBools.RacingBool3
+local RaceTime3 = game.ServerStorage.RacingSystemStorage.PlayerTimes.Time3
 
 RacingBool3.Changed:Connect(function()
 	if RacingBool3.Value == true then
