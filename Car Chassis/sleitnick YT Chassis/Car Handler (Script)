@@ -1,0 +1,80 @@
+local car = script.Parent
+local seat = car.Body.VehicleSeat
+local body = car.Body.Body
+
+
+
+local physicsService = game:GetService("PhysicsService")
+local defaultCollisionGroup = "Default"
+local characterCollisionGroup = "Character"
+
+local cooldown = 0
+
+local occupiedPlayer = nil
+local occupiedClientScript = nil
+
+local carClientScript = script.CarClient
+
+
+local function Cooldown(duration)
+	local cooldownTag = tick()
+	cooldown = cooldownTag
+	delay(duration, function()
+		if (cooldown == cooldownTag) then
+			cooldown = 0
+		end
+	end)
+end
+
+local function SetCharacterCollide(character, shouldCollide)
+	local group = (shouldCollide and defaultCollisionGroup or characterCollisionGroup)
+	for _,part in ipairs(character:GetDescendants()) do
+		if (part:IsA("BasePart")) then
+			part.Massless = not shouldCollide
+			physicsService:SetPartCollisionGroup(part, group)
+		end
+	end
+end
+
+local function BodyTouched(part)
+	
+	if (seat.Occupant or cooldown ~= 0) then return end
+	
+	local character = part.Parent
+	local player = game.Players:GetPlayerFromCharacter(character)
+	if (not player) then return end
+	
+	local humanoid = character:FindFirstChildOfClass("Humanoid")
+	if (not humanoid) then return end
+	
+	seat:Sit(humanoid)
+	occupiedPlayer = player
+	SetCharacterCollide(character, false)
+	car.PrimaryPart:SetNetworkOwner(player)
+	occupiedClientScript = carClientScript:Clone()
+	occupiedClientScript.Car.Value = car
+	occupiedClientScript.Parent = player.Backpack
+	Cooldown(1)
+	
+end
+
+local function OccupantChanged()
+	if (seat.Occupant) then return end
+	if (occupiedPlayer.Character) then
+		SetCharacterCollide(occupiedPlayer.Character, false)
+	end
+	if (occupiedClientScript.Parent) then
+		occupiedClientScript.Stop.Value = true
+		local client = occupiedClientScript
+		delay(3, function()
+			client:Destroy()
+		end)
+	end
+	occupiedClientScript.Stop.Value = true
+	car.PrimaryPart:SetNetworkOwnershipAuto()
+	occupiedPlayer = nil
+	Cooldown(3)
+end
+
+body.Touched:Connect(BodyTouched)
+seat:GetPropertyChangedSignal("Occupant"):Connect(OccupantChanged)
