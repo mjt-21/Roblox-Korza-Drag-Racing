@@ -1,0 +1,62 @@
+local car = script:WaitForChild("Car").Value
+local stop = script:WaitForChild("Stop")
+
+local seat = car.Body.VehicleSeat
+local attFL = car.Chassis.Platform.AttachmentFL
+local attFR = car.Chassis.Platform.AttachmentFR
+
+local cylFL = car.Chassis.Platform.CylindricalFL
+local cylFR = car.Chassis.Platform.CylindricalFR
+local cylBL = car.Chassis.Platform.CylindricalBL
+local cylBR = car.Chassis.Platform.CylindricalBR
+
+local heartbeat = nil
+
+local maxSteerAngle = 30
+local steer = 0
+local throttle = 0
+
+
+local function Update(dt)
+	
+	-- Steer:
+	local steerGoal = -seat.SteerFloat * maxSteerAngle
+	steer = steer + (steerGoal - steer) * math.min(dt * seat.TurnSpeed, 1)
+	attFL.Orientation = Vector3.new(0, steer, -90)
+	attFR.Orientation = Vector3.new(0, steer, -90)
+	
+	-- Throttle:
+	local throttleGoal = seat.ThrottleFloat
+	throttle = throttle + (throttleGoal - throttle) * math.min(dt * seat.TurnSpeed, 1)
+	local torque = seat.Torque
+	local speed = seat.MaxSpeed * throttle
+	cylFL.MotorMaxTorque = torque
+	cylFR.MotorMaxTorque = torque
+	cylBL.MotorMaxTorque = torque
+	cylBR.MotorMaxTorque = torque
+	cylFL.AngularVelocity = speed
+	cylFR.AngularVelocity = -speed
+	cylBL.AngularVelocity = speed
+	cylBR.AngularVelocity = -speed
+	
+end
+
+
+local function Start()
+	print("Start client")
+	heartbeat = game:GetService("RunService").Heartbeat:Connect(Update)
+end
+
+
+local function Stop()
+	print("Stop client")
+	heartbeat:Disconnect()
+	script:Destroy()
+end
+
+
+Start()
+stop.Changed:Connect(function(shouldStop)
+	if (not shouldStop) then return end
+	Stop()
+end)
