@@ -203,7 +203,7 @@ local function raceTimeout()
 					player.Name = "$nil"
 				end
 			end
-				noWinnersGUIRemote:FireAllClients()
+				noWinnersGUIRemote:FireAllClients(raceTimeLimitString)
 		end
 	end
 end
