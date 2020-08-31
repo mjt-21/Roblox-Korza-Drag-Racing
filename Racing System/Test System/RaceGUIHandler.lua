@@ -40,28 +40,45 @@ end)
 
 MainTable = {} -- Makes a global variable that will be made equal to the PlayerAssignments in MainTableScript (later)
 
-StatsRemote.OnClientEvent:Connect(function(PlayerAssignments) -- Connects to RemoteEvent from MainTableScript, updates stats from table
-	
+function updateGUI(PlayerAssignments) -- Connects to RemoteEvent from MainTableScript, updates stats from table
+	-- StatsRemote Recived In RaceGUIHandler!
 	MainTable = PlayerAssignments -- Makes the MainTable global variable be equal to the PlayerAssignments table in MainTableScript
 	
-	if PlayerAssignments[1].Name ~= "$1nil" and PlayerAssignments[1].Name ~= "$2nil" and PlayerAssignments[1].Name ~= "$3nil" and PlayerAssignments[1].Name ~= "$4nil" and PlayerAssignments[1].TimeValue ~= 0 then
+	if PlayerAssignments[1] then
 		PlayerName1.Text = PlayerAssignments[1].Name
 		PlayerTime1.Text = string.format("%0.3f", tostring(PlayerAssignments[1].TimeValue))
+	else
+		PlayerName1.Text = ""
+		PlayerTime1.Text = ""
+	end
 	
-	elseif PlayerAssignments[2].Name ~= "$1nil" and PlayerAssignments[2].Name ~= "$2nil" and PlayerAssignments[2].Name ~= "$3nil" and PlayerAssignments[2].Name ~= "$4nil" and PlayerAssignments[2].TimeValue ~= 0 then
+	if PlayerAssignments[2] then
 		PlayerName2.Text = PlayerAssignments[2].Name
 		PlayerTime2.Text = string.format("%0.3f", tostring(PlayerAssignments[2].TimeValue))
+	else
+		PlayerName2.Text = ""
+		PlayerTime2.Text = ""
+	end
 	
-	elseif PlayerAssignments[3].Name ~= "$1nil" and PlayerAssignments[3].Name ~= "$2nil" and PlayerAssignments[3].Name ~= "$3nil" and PlayerAssignments[3].Name ~= "$4nil" and PlayerAssignments[3].TimeValue ~= 0 then
+	if PlayerAssignments[3] then
 		PlayerName3.Text = PlayerAssignments[3].Name
 		PlayerTime3.Text = string.format("%0.3f", tostring(PlayerAssignments[3].TimeValue))
+	else
+		PlayerName3.Text = ""
+		PlayerTime3.Text = ""
+	end
 	
-elseif PlayerAssignments[4].Name ~= "$1nil" and PlayerAssignments[4].Name ~= "$2nil" and PlayerAssignments[4].Name ~= "$3nil" and PlayerAssignments[4].Name ~= "$4nil" and PlayerAssignments[4].TimeValue ~= 0 then
+	if PlayerAssignments[4] then
 		PlayerName4.Text = PlayerAssignments[4].Name
 		PlayerTime4.Text = string.format("%0.3f", tostring(PlayerAssignments[4].TimeValue))
+	else
+		PlayerName4.Text = ""
+		PlayerTime4.Text = ""
 	end
 
-end)
+end
+
+StatsRemote.OnClientEvent:Connect(updateGUI)
 
 RaceEndRemote.OnClientEvent:Connect(function(PlayerName) -- When player touches finish line, RemoteEvent connects and brings in PlayerName (who touched FinishLine)
 	local PlayerPlace = nil -- Variable as placeholder for what place the player is in during/after the race
@@ -105,6 +122,7 @@ RaceEndRemote.OnClientEvent:Connect(function(PlayerName) -- When player touches 
 		end
 	end
 end)
+
 
 function noWinners(raceTimeLimitString)
 	NoWinners.Visible = true
