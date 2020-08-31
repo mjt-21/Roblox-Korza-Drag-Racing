@@ -28,6 +28,7 @@ local noWinnersGUIRemote = ReplicatedStorage:WaitForChild("NoWinnersGUIRemote")
 local countdownNum = ReplicatedStorage:WaitForChild("CountdownTime")
 local raceInProgress = ServerStorage.RacingSystemStorage.RaceInProgress
 local atLeastOnePlayerFinished = ServerStorage.RacingSystemStorage.AtLeastOnePlayerFinished
+local atLeastTwoPlayersEntered = ServerStorage.RacingSystemStorage.AtLeast2PlayersEntered
 
 -- Creates main table which stores the players' stats in a match
 local PlayerAssignments = {
@@ -41,6 +42,39 @@ placesFirstBool = false
 placesSecondBool = false
 placesThirdBool = false
 placesFourthBool = false
+
+local function removeNonPlayers()
+	if PlayerAssignments[1] then
+		if PlayerAssignments[1].Name == "$1nil" or PlayerAssignments[1].Name == "$2nil" or PlayerAssignments[1].Name == "$3nil" or PlayerAssignments[1].Name == "$4nil" then
+			table.remove(PlayerAssignments, 1)
+		end
+	end
+	
+	if PlayerAssignments[2] then
+		if PlayerAssignments[2].Name == "$1nil" or PlayerAssignments[2].Name == "$2nil" or PlayerAssignments[2].Name == "$3nil" or PlayerAssignments[2].Name == "$4nil" then
+			table.remove(PlayerAssignments, 2)
+		end
+	end
+	
+	if PlayerAssignments[3] then
+		if PlayerAssignments[3].Name == "$1nil" or PlayerAssignments[3].Name == "$2nil" or PlayerAssignments[3].Name == "$3nil" or PlayerAssignments[3].Name == "$4nil" then
+			table.remove(PlayerAssignments, 3)
+		end
+	end
+	
+	if PlayerAssignments[4] then
+		if PlayerAssignments[4].Name == "$1nil" or PlayerAssignments[4].Name == "$2nil" or PlayerAssignments[4].Name == "$3nil" or PlayerAssignments[4].Name == "$4nil" then
+			table.remove(PlayerAssignments, 4)
+		end
+	end
+end
+
+raceInProgress.Changed:Connect(function()
+	while raceInProgress.Value == true do
+		removeNonPlayers()
+		wait(1)
+	end
+end)
 
 local function setPlacesBools()
 	for _, places in pairs(PlayerAssignments) do
@@ -84,6 +118,7 @@ countdownNum.Changed:Connect(function()
 end)
 
 BindableRaceEnd.Event:Connect(function(PlayerThatTouched, PlayerName) -- Checks for when FinishLineHandler sees FinishLine is Touched
+	print("FinishLine Bindable Recieved In MainTableScript!")
 	if raceInProgress.Value == true then
 		setPlacesBools()
 		raceInProgress.Value = false -- Indicates that a race is not in progress
@@ -142,7 +177,7 @@ local function raceTimeout()
 	local raceTimeLimitString = ("")	
 	
 	if raceInProgress.Value == true then
-		local raceTimeLimit = 20 -- How many seconds after the race starts to automatically end it (if race is still in progress)
+		local raceTimeLimit = 10 -- How many seconds after the race starts to automatically end it (if race is still in progress)
 		while raceTimeLimit > 10 do
 			raceTimeLimit -= 1
 			wait(1)
@@ -163,13 +198,12 @@ local function raceTimeout()
 			end
 			raceInProgress.Value = false
 			print("Race Ended!")
-			
 			if atLeastOnePlayerFinished == false then
 				for _, player in pairs(PlayerAssignments) do
 					player.Name = "$nil"
 				end
-				noWinnersGUIRemote:FireAllClients()
 			end
+				noWinnersGUIRemote:FireAllClients()
 		end
 	end
 end
