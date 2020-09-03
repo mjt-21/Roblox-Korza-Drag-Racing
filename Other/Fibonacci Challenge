@@ -1,10 +1,7 @@
-function wait(seconds)
-  local start = os.time()
-  repeat until os.time() > start + seconds
-end
+local grandSum = 0
 
-local a = 1
-local b = 2
+local a = 0
+local b = 1
 local c = 0
 
 local switch = false
@@ -14,7 +11,8 @@ while c < 4000000 do
         c = a + b
         switch = true
         if c % 2 == 0 and c <= 4000000 then
-            print(c)
+            grandSum = grandSum + c
+            print("C: " .. c)
         end
     end
 
@@ -23,7 +21,9 @@ while c < 4000000 do
         b = c
         c = a + b
         if c % 2 == 0 and c <= 4000000 then
-            print(c)
+            grandSum = grandSum + c
+            print("C: " .. c)
+            print("grandSum: " .. grandSum)
         end
     end
 end
