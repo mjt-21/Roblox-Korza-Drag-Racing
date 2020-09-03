@@ -1,0 +1,29 @@
+function wait(seconds)
+  local start = os.time()
+  repeat until os.time() > start + seconds
+end
+
+local a = 1
+local b = 2
+local c = 0
+
+local switch = false
+
+while c < 4000000 do
+    if switch == false then
+        c = a + b
+        switch = true
+        if c % 2 == 0 and c <= 4000000 then
+            print(c)
+        end
+    end
+
+    if switch == true then
+        a = b
+        b = c
+        c = a + b
+        if c % 2 == 0 and c <= 4000000 then
+            print(c)
+        end
+    end
+end
