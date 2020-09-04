@@ -1,0 +1,11 @@
+local multiple = 0
+local answer = 0
+
+while multiple < 999 do
+    multiple = multiple + 1
+    if multiple % 5 == 0 or multiple % 3 == 0 then
+        answer = answer + multiple
+    end
+end
+
+print(answer)
